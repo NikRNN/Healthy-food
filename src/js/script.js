@@ -97,3 +97,45 @@ document.addEventListener("DOMContentLoaded", () => {
   getTimer(".timer", deadline);
   getClock(deadline);
 });
+
+// вызов и закрытие модального окна
+const modal = document.querySelector(".modal"),
+  btns = document.querySelectorAll("[data-modal"),
+  closeModalBtn = document.querySelector("[data-close]");
+
+function openModal(list) {
+  list.forEach((elem) => {
+    elem.addEventListener("click", () => {
+      modal.classList.toggle("hide");
+      document.documentElement.style.overflow = "hidden";
+      clearInterval(modalTimerId);
+    });
+  });
+}
+
+function closeModal(btn) {
+  btn.addEventListener("click", () => {
+    modal.classList.toggle("hide");
+    document.documentElement.style.overflow = "scroll";
+  });
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.toggle("hide");
+      document.documentElement.style.overflow = "scroll";
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Escape") {
+      modal.classList.toggle("hide");
+      document.documentElement.style.overflow = "scroll";
+    }
+  });
+}
+
+openModal(btns);
+closeModal(closeModalBtn);
+
+const modalTimerId = setTimeout(() => {
+  modal.classList.toggle("hide");
+  document.documentElement.style.overflow = "hidden";
+}, 5000); //появление модального окна через 5 сек после захода на страницу
