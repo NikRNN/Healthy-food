@@ -91,7 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = document.querySelector(".modal"),
     btns = document.querySelectorAll("[data-modal"),
     closeModalBtn = document.querySelector("[data-close]"),
-    body = document.querySelector("body"),
     scrollY = calcScroll();
   function openModal(list) {
     list.forEach(elem => {
@@ -191,6 +190,43 @@ document.addEventListener("DOMContentLoaded", () => {
   new MenuCard("img/tabs/elite.jpg", "elite", "Меню “Премиум”", 'В меню "Премиум" мы используем не только красивый дизайн упаковки,но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 780, ".menu__field .container", "menu__item").render();
   new MenuCard("img/tabs/post.jpg", "post", 'Меню "Постное"', "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля,овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.", 550, ".menu__field .container", "menu__item").render();
 });
+
+//отправка данных на сервер
+const forms = document.querySelectorAll("form");
+const messages = {
+  success: "Спасибо! Мы скоро свяжемся с Вами",
+  failure: "Произошла ошибка, попробуйте еще раз",
+  load: "Идёт загрузка..."
+};
+forms.forEach(elem => sendFormInfo(elem));
+function sendFormInfo(form) {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const statusMessage = document.createElement("div");
+    statusMessage.textContent = messages.load;
+    form.appendChild(statusMessage);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "server.php");
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    const formData = new FormData(form);
+    let obj = {};
+    formData.forEach((key, value) => obj[key] = value);
+    const jsonObj = JSON.stringify(obj);
+    xhr.send(jsonObj);
+    xhr.addEventListener("load", () => {
+      if (xhr.status === 200) {
+        console.log(xhr.response);
+        statusMessage.textContent = messages.success;
+        form.reset();
+        setTimeout(() => {
+          statusMessage.remove();
+        }, 3000);
+      } else {
+        statusMessage.textContent = messages.failure;
+      }
+    });
+  });
+}
 /******/ })()
 ;
 //# sourceMappingURL=script.js.map
