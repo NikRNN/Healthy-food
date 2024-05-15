@@ -4,6 +4,11 @@ var __webpack_exports__ = {};
   !*** ./src/js/script.js ***!
   \**************************/
 document.addEventListener("DOMContentLoaded", () => {
+  //
+  //
+  //
+  //
+  //
   //переключение табов в секции preview
   const tabs = document.querySelectorAll(".tabheader__item"),
     tabsContent = document.querySelectorAll(".tabcontent"),
@@ -33,6 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
   hideTabsContent();
   showTabContent();
 
+  //
+  //
+  //
+  //
+  //
+  //
   //обратный таймер снизу сайта
 
   let deadline = "2024-05-20";
@@ -86,61 +97,69 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   getTimer(".timer", deadline);
   getClock(deadline);
-
+  //
+  //
+  //
+  //
   // вызов и закрытие модального окна
   const modal = document.querySelector(".modal"),
-    btns = document.querySelectorAll("[data-modal"),
-    closeModalBtn = document.querySelector("[data-close]"),
+    btnsOpenModal = document.querySelectorAll("[data-modal]"),
     scrollY = calcScroll();
-  function openModal(list) {
-    list.forEach(elem => {
-      elem.addEventListener("click", () => {
-        modal.classList.toggle("hide");
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.marginRight = `${scrollY}px`;
-        clearInterval(modalTimerId);
-      });
-    });
-  }
-  function closeModal(btn) {
-    btn.addEventListener("click", () => {
-      modal.classList.toggle("hide");
-      document.documentElement.style.overflow = "scroll";
-      document.body.style.marginRight = `0px`;
-    });
-    modal.addEventListener("click", e => {
-      if (e.target === modal) {
-        modal.classList.toggle("hide");
-        document.documentElement.style.overflow = "scroll";
-        document.body.style.marginRight = `0px`;
-      }
-    });
-    document.addEventListener("keydown", e => {
-      if (e.code === "Escape") {
-        modal.classList.toggle("hide");
-        document.documentElement.style.overflow = "scroll";
-        document.body.style.marginRight = `0px`;
-      }
-    });
-  }
-  openModal(btns);
-  closeModal(closeModalBtn);
-  const modalTimerId = setTimeout(() => {
-    modal.classList.toggle("hide");
-    document.documentElement.style.overflow = "hidden";
+  btnsOpenModal.forEach(item => item.addEventListener("click", () => {
+    openModal();
+  }));
+  function openModal() {
+    modal.classList.add("show");
+    modal.classList.remove("hide");
+    document.body.style.overflow = "hidden";
     document.body.style.marginRight = `${scrollY}px`;
-  }, 3000); //появление модального окна через 5 сек после захода на страницу
+    clearInterval(modalTimerId);
+  }
+  function closeModal() {
+    modal.classList.add("hide");
+    modal.classList.remove("show");
+    document.body.style.overflow = "scroll";
+    document.body.style.marginRight = `0px`;
+  }
+  modal.addEventListener("click", e => {
+    if (e.target === modal || e.target.getAttribute("data-close") == "") {
+      closeModal();
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.code === "Escape" && modal.classList.contains("show")) {
+      closeModal();
+    }
+  });
+  //
+  //
+  //
+  //
+  //появление модального окна через 3 сек после захода на страницу
+  const modalTimerId = setTimeout(() => {
+    openModal();
+  }, 3000);
 
+  //
+  //
+  //
+  //
+  //
+  //появление модального окна про прокрутке страницы до низа
   function showModalByScroll() {
-    if (document.documentElement.clientHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight) {
-      modal.classList.toggle("hide");
-      document.body.style.marginRight = `${scrollY}px`;
-      document.documentElement.style.overflow = "hidden";
+    if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      openModal();
       window.removeEventListener("scroll", showModalByScroll);
     }
-  } //появление модального окна про прокрутке страницы до низа
-
+  }
   window.addEventListener("scroll", showModalByScroll);
+
+  //
+  //
+  //
+  //
+  //
+  //фон за модальным окном не сдвигается
   function calcScroll() {
     let div = document.createElement("div");
     div.style.width = "50px";
@@ -152,8 +171,14 @@ document.addEventListener("DOMContentLoaded", () => {
     div.remove();
     return scrollWidth;
   }
-  calcScroll(); //фон за модальным окном не сдвигается
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //добавление класса для создания карточек меню
   class MenuCard {
     constructor(src, alt, title, descr, price, parentSelector, ...classes) {
       this.src = src;
@@ -185,48 +210,90 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //создаем элементы в блоке меню
   new MenuCard("img/tabs/vegy.jpg", "vegy", 'Меню "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 450, ".menu__field .container", "menu__item").render();
   new MenuCard("img/tabs/elite.jpg", "elite", "Меню “Премиум”", 'В меню "Премиум" мы используем не только красивый дизайн упаковки,но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 780, ".menu__field .container", "menu__item").render();
   new MenuCard("img/tabs/post.jpg", "post", 'Меню "Постное"', "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля,овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.", 550, ".menu__field .container", "menu__item").render();
-});
 
-//отправка данных на сервер
-const forms = document.querySelectorAll("form");
-const messages = {
-  success: "Спасибо! Мы скоро свяжемся с Вами",
-  failure: "Произошла ошибка, попробуйте еще раз",
-  load: "Идёт загрузка..."
-};
-forms.forEach(elem => sendFormInfo(elem));
-function sendFormInfo(form) {
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    const statusMessage = document.createElement("div");
-    statusMessage.textContent = messages.load;
-    form.appendChild(statusMessage);
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "server.php");
-    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    const formData = new FormData(form);
-    let obj = {};
-    formData.forEach((key, value) => obj[key] = value);
-    const jsonObj = JSON.stringify(obj);
-    xhr.send(jsonObj);
-    xhr.addEventListener("load", () => {
-      if (xhr.status === 200) {
-        console.log(xhr.response);
-        statusMessage.textContent = messages.success;
-        form.reset();
-        setTimeout(() => {
+  //
+  //
+  //
+  //
+  //
+  //отправка данных на сервер
+  const forms = document.querySelectorAll("form");
+  const messages = {
+    success: "Спасибо! Мы скоро свяжемся с Вами!",
+    load: "icons/spinner.svg",
+    failure: "Возникла ошибка, попробуйте еще раз"
+  };
+  forms.forEach(elem => sendFormInfo(elem));
+  function sendFormInfo(form) {
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      let statusMessage = document.createElement("img");
+      statusMessage.src = messages.load;
+      statusMessage.style.cssText = `display: block; margin: 0 auto;`;
+      form.insertAdjacentElement("afterend", statusMessage);
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "server.php");
+      xhr.setRequestHeader("Content-type", "application/json; charset = utf-8");
+      const obj = {};
+      const formData = new FormData(form);
+      formData.forEach((value, key) => {
+        obj[key] = value;
+      });
+      const jsonObj = JSON.stringify(obj);
+      xhr.send(jsonObj);
+      xhr.addEventListener("load", () => {
+        if (xhr.status === 200) {
+          console.log(xhr.response);
+          showModalAfterSendform(messages.success);
           statusMessage.remove();
-        }, 3000);
-      } else {
-        statusMessage.textContent = messages.failure;
-      }
+          form.reset();
+        } else {
+          showModalAfterSendform(messages.failure);
+          statusMessage.remove();
+          form.reset();
+        }
+      });
     });
-  });
-}
+  }
+
+  //
+  //
+  //
+  //
+  //обновление окна благодарности после успешной отправки
+  function showModalAfterSendform(message) {
+    const prevModal = document.querySelector(".modal__dialog");
+    prevModal.classList.add("hide");
+    openModal();
+    const newModal = document.createElement("div");
+    newModal.classList.add("modal__dialog");
+    newModal.innerHTML = `
+  <div class = 'modal__content'>
+    <div data-close class = 'modal__close'>×</div>
+    <div class = 'modal__title'>${message}</div>
+    </div>`;
+    document.querySelector(".modal").append(newModal);
+    document.body.style.marginRight = `${scrollY}`;
+    setTimeout(() => {
+      newModal.remove();
+      prevModal.classList.remove("hide");
+      prevModal.classList.add("show");
+      closeModal();
+      // document.body.style.marginRight = `0px`;
+    }, 3000);
+  }
+});
 /******/ })()
 ;
 //# sourceMappingURL=script.js.map
