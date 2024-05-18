@@ -301,10 +301,10 @@ document.addEventListener("DOMContentLoaded", () => {
       statusMessage.style.cssText = `display: block; margin: 0 auto;`;
       form.insertAdjacentElement("afterend", statusMessage);
 
-      const xhr = new XMLHttpRequest();
-
-      xhr.open("POST", "server.php");
-      xhr.setRequestHeader("Content-type", "application/json; charset = utf-8");
+      //XMLHttpRequest
+      // const xhr = new XMLHttpRequest();
+      // xhr.open("POST", "server.php");
+      // xhr.setRequestHeader("Content-type", "application/json; charset = utf-8");
 
       const obj = {};
       const formData = new FormData(form);
@@ -312,21 +312,42 @@ document.addEventListener("DOMContentLoaded", () => {
         obj[key] = value;
       });
       const jsonObj = JSON.stringify(obj);
-
-      xhr.send(jsonObj);
-
-      xhr.addEventListener("load", () => {
-        if (xhr.status === 200) {
-          console.log(xhr.response);
+      //fetch
+      fetch("server.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonObj,
+      })
+        .then((data) => data.text())
+        .then((data) => {
+          console.log(data);
           showModalAfterSendform(messages.success);
           statusMessage.remove();
-          form.reset();
-        } else {
+        })
+        .catch(() => {
           showModalAfterSendform(messages.failure);
           statusMessage.remove();
+        })
+        .finally(() => {
           form.reset();
-        }
-      });
+        });
+
+      //XMLHttpRequest
+      // xhr.send(jsonObj);
+      // xhr.addEventListener("load", () => {
+      //   if (xhr.status === 200) {
+      //     console.log(xhr.response);
+      //     showModalAfterSendform(messages.success);
+      //     statusMessage.remove();
+      //     form.reset();
+      //   } else {
+      //     showModalAfterSendform(messages.failure);
+      //     statusMessage.remove();
+      //     form.reset();
+      //   }
+      // });
     });
   }
 
@@ -348,14 +369,12 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class = 'modal__title'>${message}</div>
     </div>`;
     document.querySelector(".modal").append(newModal);
-    document.body.style.marginRight = `${scrollY}`;
 
     setTimeout(() => {
       newModal.remove();
       prevModal.classList.remove("hide");
       prevModal.classList.add("show");
       closeModal();
-      // document.body.style.marginRight = `0px`;
     }, 3000);
   }
 });
