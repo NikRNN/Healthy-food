@@ -245,36 +245,81 @@ document.addEventListener("DOMContentLoaded", () => {
   //
   //
   //
-  //создаем элементы в блоке меню
-  new MenuCard(
-    "img/tabs/vegy.jpg",
-    "vegy",
-    'Меню "Фитнес"',
-    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    450,
-    ".menu__field .container",
-    "menu__item"
-  ).render();
+  //создаем элементы в блоке меню без данных с сервера (вручную)
+  // new MenuCard(
+  //   "img/tabs/vegy.jpg",
+  //   "vegy",
+  //   'Меню "Фитнес"',
+  //   'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+  //   450,
+  //   ".menu__field .container",
+  //   "menu__item"
+  // ).render();
 
-  new MenuCard(
-    "img/tabs/elite.jpg",
-    "elite",
-    "Меню “Премиум”",
-    'В меню "Премиум" мы используем не только красивый дизайн упаковки,но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-    780,
-    ".menu__field .container",
-    "menu__item"
-  ).render();
+  // new MenuCard(
+  //   "img/tabs/elite.jpg",
+  //   "elite",
+  //   "Меню “Премиум”",
+  //   'В меню "Премиум" мы используем не только красивый дизайн упаковки,но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+  //   780,
+  //   ".menu__field .container",
+  //   "menu__item"
+  // ).render();
 
-  new MenuCard(
-    "img/tabs/post.jpg",
-    "post",
-    'Меню "Постное"',
-    "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля,овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
-    550,
-    ".menu__field .container",
-    "menu__item"
-  ).render();
+  // new MenuCard(
+  //   "img/tabs/post.jpg",
+  //   "post",
+  //   'Меню "Постное"',
+  //   "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля,овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
+  //   550,
+  //   ".menu__field .container",
+  //   "menu__item"
+  // ).render();
+
+  //
+  //
+  //
+  //
+  //создаем карточки в меню с использованием функции getDataFromServer
+  getDataFromServer("http://localhost:3000/menu").then((data) => {
+    data.forEach(({ img, altming, title, descr, price }) => {
+      new MenuCard(
+        img,
+        altming,
+        title,
+        descr,
+        price,
+        ".menu .container"
+      ).render();
+    });
+  });
+  //создаем карточки в меню без использования классов
+  // getDataFromServer("http://localhost:3000/menu").then((data) =>
+  //   createMenuCard(data)
+  // );
+
+  // function createMenuCard(data) {
+  //   data.forEach(({ img, altming, title, descr, price }) => {
+  //     const element = document.createElement("div");
+
+  //     element.classList.add("menu__item");
+
+  //     element.innerHTML = `
+  //     <img src=${img} alt=${altming} />
+  //           <h3 class="menu__item-subtitle">${title}</h3>
+  //           <div class="menu__item-descr">
+  //             ${descr}
+  //           </div>
+  //           <div class="menu__item-divider"></div>
+  //           <div class="menu__item-price">
+  //             <div class="menu__item-cost">Цена:</div>
+  //             <div class="menu__item-total"><span>${price}</span> руб/день</div>
+  //           </div>
+  //     `;
+
+  //     document.querySelector(".menu .container").append(element);
+  //   });
+  // }
 
   //
   //
@@ -292,6 +337,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   forms.forEach((elem) => sendFormInfo(elem));
 
+  //
+  //post функция для отправки данных на сервер
+  async function postDataToServer(url, data) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data,
+    });
+
+    return await res.json();
+  }
+  //get функция для получения данных с сервера, используется для формирования карточек меню через класс
+  async function getDataFromServer(url) {
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Соединение с ${url} завершилось с ${res.status}`);
+    }
+    return await res.json();
+  }
+
   function sendFormInfo(form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -306,21 +373,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // xhr.open("POST", "server.php");
       // xhr.setRequestHeader("Content-type", "application/json; charset = utf-8");
 
-      const obj = {};
       const formData = new FormData(form);
-      formData.forEach((value, key) => {
-        obj[key] = value;
-      });
-      const jsonObj = JSON.stringify(obj);
+      //либо так создаем тело для отправки на сервер, либо через Object Entries
+      // const obj = {};
+      // formData.forEach((value, key) => {
+      //   obj[key] = value;
+      // });
+      const jsonObj = JSON.stringify(Object.fromEntries(formData.entries()));
       //fetch
-      fetch("server.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonObj,
-      })
-        .then((data) => data.text())
+      postDataToServer("http://localhost:3000/requests", jsonObj)
         .then((data) => {
           console.log(data);
           showModalAfterSendform(messages.success);
@@ -377,4 +438,55 @@ document.addEventListener("DOMContentLoaded", () => {
       closeModal();
     }, 3000);
   }
+
+  //
+  //
+  //
+  //
+  //слайдер
+  const sliders = document.querySelectorAll(".offer__slide"),
+    cur = document.querySelector("#current"),
+    total = document.querySelector("#total"),
+    prevArrow = document.querySelector(".offer__slider-prev"),
+    nextArrow = document.querySelector(".offer__slider-next");
+
+  if (sliders.length < 10) {
+    total.textContent = `0${sliders.length}`;
+  } else {
+    total.textContent = `${sliders.length}`;
+  }
+
+  function hideSliders() {
+    sliders.forEach((elem) => {
+      elem.classList.add("hide");
+      elem.classList.remove("show", "fade");
+    });
+  }
+
+  function showSliders(i) {
+    hideSliders();
+    sliders[i].classList.add("show", "fade");
+    sliders[i].classList.remove("hide");
+    if (i < 10) {
+      cur.textContent = `0${i + 1}`;
+    } else {
+      cur.textContent = `${i + 1}`;
+    }
+  }
+
+  let currIndex = 0;
+
+  showSliders(currIndex);
+
+  prevArrow.addEventListener("click", (e) => {
+    e.preventDefault();
+    currIndex = currIndex > 0 ? currIndex - 1 : sliders.length - 1;
+    showSliders(currIndex);
+  });
+
+  nextArrow.addEventListener("click", (e) => {
+    e.preventDefault();
+    currIndex = currIndex < sliders.length - 1 ? currIndex + 1 : 0;
+    showSliders(currIndex);
+  });
 });
