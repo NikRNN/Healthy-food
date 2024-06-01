@@ -1,8 +1,8 @@
 "use strict";
 
-import path from "path";
+const path = require("path");
 
-export default {
+module.exports = {
   mode: "development",
   entry: "./js/script.js",
   output: {

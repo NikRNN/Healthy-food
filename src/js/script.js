@@ -1,17 +1,17 @@
-import { calculator } from "./modules/calculator.js";
-import { cards } from "./modules/cards.js";
-import { modal } from "./modules/modal.js";
-import { server } from "./modules/server.js";
-import { slider } from "./modules/slider.js";
-import { tabs } from "./modules/tabs.js";
-import { timer } from "./modules/timer.js";
-
 window.addEventListener("DOMContentLoaded", () => {
-  calculator();
-  cards();
+  const tabs = require("./modules/tabs"),
+    modal = require("./modules/modal"),
+    timer = require("./modules/timer"),
+    cards = require("./modules/cards"),
+    calc = require("./modules/calc"),
+    server = require("./modules/server"),
+    slider = require("./modules/slider");
+
+  tabs();
   modal();
+  timer();
+  cards();
+  calc();
   server();
   slider();
-  tabs();
-  timer();
 });
