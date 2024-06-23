@@ -1,6 +1,16 @@
-function server() {
+import { closeModal, openModal } from "./modal";
+
+async function getDataFromServer(url) {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Соединение с ${url} завершилось с ${res.status}`);
+  }
+  return await res.json();
+}
+
+function server(formSelector, modalTimerId) {
   //отправка данных на сервер
-  const forms = document.querySelectorAll("form");
+  const forms = document.querySelectorAll(formSelector);
 
   const messages = {
     success: "Спасибо! Мы скоро свяжемся с Вами!",
@@ -24,13 +34,6 @@ function server() {
     return await res.json();
   }
   //get функция для получения данных с сервера, используется для формирования карточек меню через класс
-  async function getDataFromServer(url) {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(`Соединение с ${url} завершилось с ${res.status}`);
-    }
-    return await res.json();
-  }
 
   function sendFormInfo(form) {
     form.addEventListener("submit", (e) => {
@@ -93,7 +96,7 @@ function server() {
   function showModalAfterSendform(message) {
     const prevModal = document.querySelector(".modal__dialog");
     prevModal.classList.add("hide");
-    openModal();
+    openModal(".modal", modalTimerId);
 
     const newModal = document.createElement("div");
     newModal.classList.add("modal__dialog");
@@ -108,9 +111,10 @@ function server() {
       newModal.remove();
       prevModal.classList.remove("hide");
       prevModal.classList.add("show");
-      closeModal();
+      closeModal(".modal");
     }, 3000);
   }
 }
 
-export { server };
+export default server;
+export { getDataFromServer };

@@ -15,23 +15,29 @@ __webpack_require__.r(__webpack_exports__);
 function calculator() {
   //калькулятор
   const calcResult = document.querySelector(".calculating__result");
+
   let sex, height, weight, age, ratio;
+
   if (localStorage.getItem("sex")) {
     sex = localStorage.getItem("sex");
   } else {
     sex = "female";
     localStorage.setItem("sex", "female");
   }
+
   if (localStorage.getItem("ratio")) {
     ratio = localStorage.getItem("ratio");
   } else {
     ratio = 1.375;
     localStorage.setItem("ratio", 1.375);
   }
+
   function initStartCalc(selector, activeClass) {
     const elements = document.querySelectorAll(selector);
-    elements.forEach(elem => {
+
+    elements.forEach((elem) => {
       elem.classList.remove(activeClass);
+
       if (elem.getAttribute("id") === localStorage.getItem("sex")) {
         elem.classList.add(activeClass);
       }
@@ -40,25 +46,37 @@ function calculator() {
       }
     });
   }
+
   initStartCalc("#gender div", "calculating__choose-item_active");
-  initStartCalc(".calculating__choose_big div", "calculating__choose-item_active");
+  initStartCalc(
+    ".calculating__choose_big div",
+    "calculating__choose-item_active"
+  );
+
   function getResultCalc() {
     if (!sex || !height || !weight || !age || !ratio) {
       calcResult.textContent = "____";
       return;
     }
     if (sex == "female") {
-      calcResult.textContent = Math.round(447.6 + 9.2 * weight + 3.1 * height - 4.3 * age * ratio);
+      calcResult.textContent = Math.round(
+        447.6 + 9.2 * weight + 3.1 * height - 4.3 * age * ratio
+      );
     }
     if (sex == "male") {
-      calcResult.textContent = Math.round(88.36 + 13.4 * weight + 4.8 * height - 5.7 * age * ratio);
+      calcResult.textContent = Math.round(
+        88.36 + 13.4 * weight + 4.8 * height - 5.7 * age * ratio
+      );
     }
   }
+
   getResultCalc();
+
   function getStaticInfoForCalc(selector, activeClass) {
     const elements = document.querySelectorAll(selector);
-    elements.forEach(elem => {
-      elem.addEventListener("click", e => {
+
+    elements.forEach((elem) => {
+      elem.addEventListener("click", (e) => {
         if (e.target.getAttribute("data-ratio")) {
           ratio = +e.target.getAttribute("data-ratio");
           localStorage.setItem("ratio", +e.target.getAttribute("data-ratio"));
@@ -66,22 +84,32 @@ function calculator() {
           sex = e.target.getAttribute("id");
           localStorage.setItem("sex", e.target.getAttribute("id"));
         }
-        elements.forEach(elem => elem.classList.remove(activeClass));
+
+        elements.forEach((elem) => elem.classList.remove(activeClass));
+
         e.target.classList.add(activeClass);
+
         getResultCalc();
       });
     });
   }
+
   getStaticInfoForCalc("#gender div", "calculating__choose-item_active");
-  getStaticInfoForCalc(".calculating__choose_big div", "calculating__choose-item_active");
+  getStaticInfoForCalc(
+    ".calculating__choose_big div",
+    "calculating__choose-item_active"
+  );
+
   function getDimanicInfoForCalc(selector) {
     const input = document.querySelector(selector);
+
     input.addEventListener("input", () => {
       if (input.value.match(/\D/g)) {
         input.style.border = "1.5px solid red";
       } else {
         input.style.border = "none";
       }
+
       switch (input.getAttribute("id")) {
         case "height":
           height = +input.value;
@@ -96,11 +124,14 @@ function calculator() {
       getResultCalc();
     });
   }
+
   getDimanicInfoForCalc("#height");
   getDimanicInfoForCalc("#weight");
   getDimanicInfoForCalc("#age");
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (calculator);
+
 
 /***/ }),
 
@@ -116,6 +147,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _server__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./server */ "./src/js/modules/server.js");
 
+
 function cards() {
   //добавление класса для создания карточек меню
   class MenuCard {
@@ -128,13 +160,16 @@ function cards() {
       this.parent = document.querySelector(parentSelector);
       this.classes = classes;
     }
+
     render() {
       const div = document.createElement("div");
+
       if (this.classes.length === 0) {
         div.classList.add("menu__item");
       } else {
-        this.classes.forEach(className => div.classList.add(className));
+        this.classes.forEach((className) => div.classList.add(className));
       }
+
       div.innerHTML = `<img src=${this.src} alt=${this.alt} />
             <h3 class="menu__item-subtitle">${this.title}</h3>
             <div class="menu__item-descr">
@@ -145,6 +180,7 @@ function cards() {
               <div class="menu__item-cost">Цена:</div>
               <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
             </div>`;
+
       this.parent.append(div);
     }
   }
@@ -192,15 +228,16 @@ function cards() {
   //
   //
   //создаем карточки в меню с использованием функции getDataFromServer
-  (0,_server__WEBPACK_IMPORTED_MODULE_0__.getDataFromServer)("http://localhost:3000/menu").then(data => {
-    data.forEach(({
-      img,
-      altming,
-      title,
-      descr,
-      price
-    }) => {
-      new MenuCard(img, altming, title, descr, price, ".menu .container").render();
+  (0,_server__WEBPACK_IMPORTED_MODULE_0__.getDataFromServer)("http://localhost:3000/menu").then((data) => {
+    data.forEach(({ img, altming, title, descr, price }) => {
+      new MenuCard(
+        img,
+        altming,
+        title,
+        descr,
+        price,
+        ".menu .container"
+      ).render();
     });
   });
   //создаем карточки в меню без использования классов
@@ -237,7 +274,9 @@ function cards() {
   //
   //
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (cards);
+
 
 /***/ }),
 
@@ -259,10 +298,12 @@ function openModal(modalSelector, modalTimerId) {
   modal.classList.remove("hide");
   document.body.style.overflow = "hidden";
   document.body.style.marginRight = `${scrollY}px`;
+
   if (modalTimerId) {
     clearInterval(modalTimerId);
   }
 }
+
 function closeModal(modalSelector) {
   const modal = document.querySelector(modalSelector);
   modal.classList.add("hide");
@@ -270,31 +311,42 @@ function closeModal(modalSelector) {
   document.body.style.overflow = "scroll";
   document.body.style.marginRight = `0px`;
 }
+
 function calcScroll() {
   let div = document.createElement("div");
+
   div.style.width = "50px";
   div.style.height = "50px";
   div.style.overflowY = "scroll";
   div.style.visibility = "hidden";
+
   document.body.appendChild(div);
   let scrollWidth = div.offsetWidth - div.clientWidth;
+
   div.remove();
+
   return scrollWidth;
 }
 scrollY = calcScroll();
+
 function modal(triggerSelector, modalSelector, modalTimerId) {
   // вызов и закрытие модального окна
   const modal = document.querySelector(modalSelector),
     btnsOpenModal = document.querySelectorAll(triggerSelector);
-  btnsOpenModal.forEach(item => item.addEventListener("click", () => {
-    openModal(modalSelector, modalTimerId);
-  }));
-  modal.addEventListener("click", e => {
+
+  btnsOpenModal.forEach((item) =>
+    item.addEventListener("click", () => {
+      openModal(modalSelector, modalTimerId);
+    })
+  );
+
+  modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.getAttribute("data-close") == "") {
       closeModal(modalSelector);
     }
   });
-  document.addEventListener("keydown", e => {
+
+  document.addEventListener("keydown", (e) => {
     if (e.code === "Escape" && modal.classList.contains("show")) {
       closeModal(modalSelector);
     }
@@ -311,7 +363,10 @@ function modal(triggerSelector, modalSelector, modalTimerId) {
   //
   //появление модального окна про прокрутке страницы до низа
   function showModalByScroll() {
-    if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+    if (
+      window.scrollY + document.documentElement.clientHeight >=
+      document.documentElement.scrollHeight
+    ) {
       openModal(modalSelector, modalTimerId);
       window.removeEventListener("scroll", showModalByScroll);
     }
@@ -325,7 +380,9 @@ function modal(triggerSelector, modalSelector, modalTimerId) {
   //
   //фон за модальным окном не сдвигается
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (modal);
+
 
 
 
@@ -344,6 +401,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal */ "./src/js/modules/modal.js");
 
+
 async function getDataFromServer(url) {
   const res = await fetch(url);
   if (!res.ok) {
@@ -351,15 +409,18 @@ async function getDataFromServer(url) {
   }
   return await res.json();
 }
-function server() {
+
+function server(formSelector, modalTimerId) {
   //отправка данных на сервер
-  const forms = document.querySelectorAll("form");
+  const forms = document.querySelectorAll(formSelector);
+
   const messages = {
     success: "Спасибо! Мы скоро свяжемся с Вами!",
     load: "icons/spinner.svg",
-    failure: "Возникла ошибка, попробуйте еще раз"
+    failure: "Возникла ошибка, попробуйте еще раз",
   };
-  forms.forEach(elem => sendFormInfo(elem));
+
+  forms.forEach((elem) => sendFormInfo(elem));
 
   //
   //post функция для отправки данных на сервер
@@ -367,17 +428,19 @@ function server() {
     const res = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: data
+      body: data,
     });
+
     return await res.json();
   }
   //get функция для получения данных с сервера, используется для формирования карточек меню через класс
 
   function sendFormInfo(form) {
-    form.addEventListener("submit", e => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
+
       let statusMessage = document.createElement("img");
       statusMessage.src = messages.load;
       statusMessage.style.cssText = `display: block; margin: 0 auto;`;
@@ -396,16 +459,19 @@ function server() {
       // });
       const jsonObj = JSON.stringify(Object.fromEntries(formData.entries()));
       //fetch
-      postDataToServer("http://localhost:3000/requests", jsonObj).then(data => {
-        console.log(data);
-        showModalAfterSendform(messages.success);
-        statusMessage.remove();
-      }).catch(() => {
-        showModalAfterSendform(messages.failure);
-        statusMessage.remove();
-      }).finally(() => {
-        form.reset();
-      });
+      postDataToServer("http://localhost:3000/requests", jsonObj)
+        .then((data) => {
+          console.log(data);
+          showModalAfterSendform(messages.success);
+          statusMessage.remove();
+        })
+        .catch(() => {
+          showModalAfterSendform(messages.failure);
+          statusMessage.remove();
+        })
+        .finally(() => {
+          form.reset();
+        });
 
       //XMLHttpRequest
       // xhr.send(jsonObj);
@@ -432,7 +498,8 @@ function server() {
   function showModalAfterSendform(message) {
     const prevModal = document.querySelector(".modal__dialog");
     prevModal.classList.add("hide");
-    (0,_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)();
+    (0,_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)(".modal", modalTimerId);
+
     const newModal = document.createElement("div");
     newModal.classList.add("modal__dialog");
     newModal.innerHTML = `
@@ -441,15 +508,18 @@ function server() {
     <div class = 'modal__title'>${message}</div>
     </div>`;
     document.querySelector(".modal").append(newModal);
+
     setTimeout(() => {
       newModal.remove();
       prevModal.classList.remove("hide");
       prevModal.classList.add("show");
-      (0,_modal__WEBPACK_IMPORTED_MODULE_0__.closeModal)();
+      (0,_modal__WEBPACK_IMPORTED_MODULE_0__.closeModal)(".modal");
     }, 3000);
   }
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (server);
+
 
 
 /***/ }),
@@ -482,17 +552,22 @@ function slider() {
 
   //для точек под слайдером
   mainSliderWrapper.style.position = "relative";
+
   const indicators = document.createElement("ol");
   const dots = [];
   mainSliderWrapper.append(indicators);
   indicators.classList.add("carousel-indicators");
+
   sliderInnerWrapper.style.width = 100 * sliders.length + "%";
   sliderInnerWrapper.style.display = "flex";
   sliderInnerWrapper.style.transition = "0.5s all";
+
   sliderWrapper.style.overflow = "hidden";
-  sliders.forEach(slide => {
+
+  sliders.forEach((slide) => {
     slide.style.width = width;
   });
+
   if (sliders.length < 10) {
     total.textContent = `0${sliders.length}`;
     cur.textContent = `0${currIndex}`;
@@ -500,6 +575,7 @@ function slider() {
     total.textContent = `${sliders.length}`;
     cur.textContent = `${currIndex}`;
   }
+
   prevArrow.addEventListener("click", () => {
     if (offset == 0) {
       offset = +width.replace(/\D/g, "") * (sliders.length - 1);
@@ -507,6 +583,7 @@ function slider() {
       offset -= +width.replace(/\D/g, "");
     }
     sliderInnerWrapper.style.transform = `translateX(-${offset}px)`;
+
     if (currIndex == 1) {
       currIndex = sliders.length;
     } else {
@@ -517,18 +594,22 @@ function slider() {
     } else {
       cur.textContent = `${currIndex}`;
     }
-    dots.forEach(dot => {
+
+    dots.forEach((dot) => {
       dot.style.opacity = "0.5";
     });
     dots[currIndex - 1].style.opacity = "1";
   });
+
   nextArrow.addEventListener("click", () => {
     if (offset == +width.replace(/\D/g, "") * (sliders.length - 1)) {
       offset = 0;
     } else {
       offset += +width.replace(/\D/g, "");
     }
+
     sliderInnerWrapper.style.transform = `translate(-${offset}px)`;
+
     if (currIndex == sliders.length) {
       currIndex = 1;
     } else {
@@ -539,7 +620,8 @@ function slider() {
     } else {
       cur.textContent = `${currIndex}`;
     }
-    dots.forEach(dot => {
+
+    dots.forEach((dot) => {
       dot.style.opacity = "0.5";
     });
     dots[currIndex - 1].style.opacity = "1";
@@ -556,19 +638,25 @@ function slider() {
     indicators.append(dot);
     dots.push(dot);
   }
-  dots.forEach(dot => {
-    dot.addEventListener("click", e => {
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", (e) => {
       e.preventDefault();
+
       const slideTo = e.target.getAttribute("data-slide-to");
+
       currIndex = slideTo;
+
       offset = +width.replace(/\D/g, "") * (slideTo - 1);
       sliderInnerWrapper.style.transform = `translate(-${offset}px)`;
+
       if (sliders.length < 10) {
         cur.textContent = `0${currIndex}`;
       } else {
         cur.textContent = `${currIndex}`;
       }
-      dots.forEach(dot => {
+
+      dots.forEach((dot) => {
         dot.style.opacity = "0.5";
       });
       dots[currIndex - 1].style.opacity = "1";
@@ -615,7 +703,9 @@ function slider() {
   //   showSliders(currIndex);
   // });
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (slider);
+
 
 /***/ }),
 
@@ -629,25 +719,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function tabs() {
+function tabs(
+  tabsSelector,
+  tabsContentSelector,
+  tabsParentSelector,
+  activeClass
+) {
   //переключение табов в секции preview
-  const tabs = document.querySelectorAll(".tabheader__item"),
-    tabsContent = document.querySelectorAll(".tabcontent"),
-    tabsParent = document.querySelector(".tabheader__items");
+  const tabs = document.querySelectorAll(tabsSelector),
+    tabsContent = document.querySelectorAll(tabsContentSelector),
+    tabsParent = document.querySelector(tabsParentSelector);
+
   function hideTabsContent() {
-    tabsContent.forEach(elem => {
+    tabsContent.forEach((elem) => {
       elem.classList.add("hide");
       elem.classList.remove("show", "fade");
     });
-    tabs.forEach(elem => elem.classList.remove("tabheader__item_active"));
+    tabs.forEach((elem) => elem.classList.remove(activeClass));
   }
+
   function showTabContent(i = 0) {
     tabsContent[i].classList.add("show", "fade");
     tabsContent[i].classList.remove("hide");
-    tabs[i].classList.add("tabheader__item_active");
+    tabs[i].classList.add(activeClass);
   }
-  tabsParent.addEventListener("click", e => {
-    if (e.target && e.target.classList.contains("tabheader__item")) {
+
+  tabsParent.addEventListener("click", (e) => {
+    if (e.target && e.target.classList.contains(tabsSelector.slice(1))) {
       tabs.forEach((elem, index) => {
         if (elem == e.target) {
           hideTabsContent();
@@ -656,10 +754,13 @@ function tabs() {
       });
     }
   });
+
   hideTabsContent();
   showTabContent();
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (tabs);
+
 
 /***/ }),
 
@@ -673,13 +774,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function timer() {
+function timer(id, deadline) {
   //обратный таймер снизу сайта
 
-  let deadline = "2024-05-20";
   function getClock(endtime) {
     let days, hours, minutes, seconds;
+
     let difference = Date.parse(endtime) - Date.parse(new Date());
+
     if (difference <= 0) {
       days = 0;
       hours = 0;
@@ -687,18 +789,20 @@ function timer() {
       seconds = 0;
     } else {
       days = Math.floor(difference / (24 * 60 * 60 * 1000));
-      hours = Math.floor(difference / (1000 * 60 * 60) % 24);
-      minutes = Math.floor(difference / (1000 * 60) % 60);
-      seconds = Math.floor(difference / 1000 % 60);
+      hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      minutes = Math.floor((difference / (1000 * 60)) % 60);
+      seconds = Math.floor((difference / 1000) % 60);
     }
+
     return {
       difference,
       days,
       hours,
       minutes,
-      seconds
+      seconds,
     };
   }
+
   function getZero(num) {
     if (num < 10 && num >= 0) {
       return "0" + num;
@@ -706,6 +810,7 @@ function timer() {
       return num;
     }
   }
+
   function getTimer(selector, endtime) {
     const timer = document.querySelector(selector),
       days = timer.querySelector("#days"),
@@ -713,22 +818,29 @@ function timer() {
       minutes = timer.querySelector("#minutes"),
       seconds = timer.querySelector("#seconds"),
       timerId = setInterval(updateClock, 1000);
+
     updateClock();
+
     function updateClock() {
       const timer = getClock(endtime);
+
       days.innerHTML = getZero(timer.days);
       hours.innerHTML = getZero(timer.hours);
       minutes.innerHTML = getZero(timer.minutes);
       seconds.innerHTML = getZero(timer.seconds);
+
       if (timer.difference <= 0) {
         clearInterval(timerId);
       }
     }
   }
-  getTimer(".timer", deadline);
+
+  getTimer(id, deadline);
   getClock(deadline);
 }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (timer);
+
 
 /***/ })
 
@@ -810,21 +922,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 window.addEventListener("DOMContentLoaded", () => {
   //появление модального окна через 3 сек после захода на страницу
   const modalTimerId = setTimeout(() => {
     (0,_modules_modal__WEBPACK_IMPORTED_MODULE_1__.openModal)(".modal", modalTimerId);
   }, 3000);
-  (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_0__["default"])();
+
+  (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_0__["default"])(
+    ".tabheader__item",
+    ".tabcontent",
+    ".tabheader__items",
+    "tabheader__item_active"
+  );
   (0,_modules_modal__WEBPACK_IMPORTED_MODULE_1__["default"])("[data-modal]", ".modal", modalTimerId);
-  (0,_modules_timer__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,_modules_timer__WEBPACK_IMPORTED_MODULE_2__["default"])(".timer", "2024-08-15");
   (0,_modules_cards__WEBPACK_IMPORTED_MODULE_3__["default"])();
   (0,_modules_calculator__WEBPACK_IMPORTED_MODULE_4__["default"])();
-  (0,_modules_server__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  (0,_modules_server__WEBPACK_IMPORTED_MODULE_5__["default"])("form", modalTimerId);
   (0,_modules_slider__WEBPACK_IMPORTED_MODULE_6__["default"])();
 });
+
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=script.js.map
+//# sourceMappingURL=bundle.js.map

@@ -116,4 +116,4 @@ function calculator() {
   getDimanicInfoForCalc("#age");
 }
 
-export { calculator };
+export default calculator;

@@ -1,7 +1,5 @@
-function timer() {
+function timer(id, deadline) {
   //обратный таймер снизу сайта
-
-  let deadline = "2024-05-20";
 
   function getClock(endtime) {
     let days, hours, minutes, seconds;
@@ -61,8 +59,8 @@ function timer() {
     }
   }
 
-  getTimer(".timer", deadline);
+  getTimer(id, deadline);
   getClock(deadline);
 }
 
-export { timer };
+export default timer;

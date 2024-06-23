@@ -1,3 +1,5 @@
+import { getDataFromServer } from "./server";
+
 function cards() {
   //добавление класса для создания карточек меню
   class MenuCard {
@@ -125,4 +127,4 @@ function cards() {
   //
 }
 
-export { cards };
+export default cards;

@@ -7,7 +7,8 @@ const postcss = require("gulp-postcss");
 const browsersync = require("browser-sync");
 const shell = require("gulp-shell");
 
-const dist = "./dist";
+// const dist = "./dist";
+const dist = "d:/Program Files/OSPanel/domains/healthy";
 
 gulp.task("copy-html", () => {
   return gulp

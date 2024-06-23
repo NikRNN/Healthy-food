@@ -168,4 +168,4 @@ function slider() {
   // });
 }
 
-export { slider };
+export default slider;
